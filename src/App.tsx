@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { Button } from "@material-ui/core";
 import { LinearProgress } from "@material-ui/core";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import { toPng } from "html-to-image";
 import download from "downloadjs";
+import SkillForm from "./components/SkillForm";
+interface SkillProps {
+  name: string;
+  level: number;
+}
+const Skill = (props: SkillProps) => {
+  const { name, level } = props;
 
-const Skill = () => {
   return (
     <>
-      <p>react</p>
-      <LinearProgress variant="determinate" value={50} />
+      <p>{name}</p>
+      <LinearProgress variant="determinate" value={level} />
     </>
   );
 };
@@ -18,22 +23,20 @@ const Skill = () => {
 const Boton = () => {
   const [skills, addSkill] = useState<Array<string>>([]);
 
-  const createSkill = () => {
-    return addSkill((oldArray) => [...oldArray, `Entry ${oldArray.length}`]);
+  const createSkill = (skillName: string) => {
+    return addSkill((oldArray) => [...oldArray, skillName]);
   };
 
   const reset = () => {
-    return addSkill((oldArray) => []);
+    return addSkill(() => []);
   };
-
-  const skillsRef = React.createRef();
 
   const skillList = () => {
     return (
       <ul id="skills">
         {skills.map((s) => (
           <li key={s}>
-            <Skill key={s} />
+            <Skill key={s} name={s} level={10} />
           </li>
         ))}
       </ul>
@@ -52,9 +55,8 @@ const Boton = () => {
 
   return (
     <>
-      <Button onClick={createSkill} color="primary">
-        Add new Skill
-      </Button>
+      <SkillForm addSkillToState={createSkill} />
+
       {skillList()}
       <Button onClick={stringSkills} color="primary">
         Download
