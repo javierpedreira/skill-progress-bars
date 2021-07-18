@@ -1,29 +1,15 @@
 import React, { useState } from "react";
 import "./App.css";
 import { Button } from "@material-ui/core";
-import { LinearProgress } from "@material-ui/core";
 import { toPng } from "html-to-image";
 import download from "downloadjs";
 import SkillForm from "./components/SkillForm";
-interface SkillProps {
-  name: string;
-  level: number;
-}
-const Skill = (props: SkillProps) => {
-  const { name, level } = props;
-
-  return (
-    <>
-      <p>{name}</p>
-      <LinearProgress variant="determinate" value={level} />
-    </>
-  );
-};
+import Skill, { SkillProps } from "./components/Skill";
 
 const Boton = () => {
-  const [skills, addSkill] = useState<Array<string>>([]);
+  const [skills, addSkill] = useState<Array<SkillProps>>([]);
 
-  const createSkill = (skillName: string) => {
+  const createSkill = (skillName: SkillProps) => {
     return addSkill((oldArray) => [...oldArray, skillName]);
   };
 
@@ -35,8 +21,8 @@ const Boton = () => {
     return (
       <ul id="skills">
         {skills.map((s) => (
-          <li key={s}>
-            <Skill key={s} name={s} level={10} />
+          <li key={s.name}>
+            <Skill key={s.name} name={s.name} level={s.level} />
           </li>
         ))}
       </ul>

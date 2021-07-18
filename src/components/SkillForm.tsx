@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@material-ui/core";
+import { SkillProps } from "./Skill";
 
 interface SkillForm {
-  addSkillToState: (skillName: string) => void;
+  addSkillToState: (skillName: SkillProps) => void;
 }
 
 const SkillFormComponent = (props: SkillForm) => {
@@ -18,7 +19,10 @@ const SkillFormComponent = (props: SkillForm) => {
   };
 
   const addNewSkill = () => {
-    props.addSkillToState(skillName);
+    props.addSkillToState({
+      name: skillName,
+      level: currentLevel,
+    });
   };
 
   return (
@@ -34,6 +38,7 @@ const SkillFormComponent = (props: SkillForm) => {
         id="standard-basic"
         label="Current level"
         size="small"
+        type="number"
         onChange={storeCurrentLevel}
       />
 
