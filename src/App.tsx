@@ -1,63 +1,57 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Button } from "@material-ui/core";
-import { toPng } from "html-to-image";
-import download from "downloadjs";
+import { Container } from "@material-ui/core";
 import SkillForm from "./components/SkillForm";
-import Skill, { SkillProps } from "./components/Skill";
+import { SkillProps } from "./components/Skill";
+import { LegendDisplayProps } from "./components/LegendDisplay";
+import SkillLists from "./components/SkillListProps";
 
-const Boton = () => {
+const App = () => {
   const [skills, addSkill] = useState<Array<SkillProps>>([]);
+  const [leftLegend, addLeftLegend] = useState<LegendDisplayProps | undefined>(
+    undefined
+  );
+  const [middleLegend, addMiddleLegend] = useState<
+    LegendDisplayProps | undefined
+  >(undefined);
+  const [rightLegend, addRightLegend] = useState<
+    LegendDisplayProps | undefined
+  >(undefined);
 
   const createSkill = (skillName: SkillProps) => {
     return addSkill((oldArray) => [...oldArray, skillName]);
+  };
+
+  const addLegend = (legendDesc: LegendDisplayProps, position: string) => {
+    switch (position) {
+      case "left":
+        return addLeftLegend(legendDesc);
+      case "middle":
+        return addMiddleLegend(legendDesc);
+      case "right":
+        return addRightLegend(legendDesc);
+    }
   };
 
   const reset = () => {
     return addSkill(() => []);
   };
 
-  const skillList = () => {
-    return (
-      <ul id="skills">
-        {skills.map((s) => (
-          <li key={s.name}>
-            <Skill key={s.name} name={s.name} level={s.level} />
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  const stringSkills = () => {
-    const data = document.getElementById("skills");
-
-    return !!data
-      ? toPng(data).then(function (dataUrl) {
-          download(dataUrl, "my-node.png");
-        })
-      : null;
-  };
-
-  return (
-    <>
-      <SkillForm addSkillToState={createSkill} />
-
-      {skillList()}
-      <Button onClick={stringSkills} color="primary">
-        Download
-      </Button>
-      <Button onClick={reset} color="primary">
-        Reset
-      </Button>
-    </>
-  );
-};
-
-const App = () => {
   return (
     <div className="App">
-      <Boton />
+      <Container>
+        <SkillForm
+          addSkillToState={createSkill}
+          updateLegendDisplay={addLegend}
+        />
+        <SkillLists
+          leftLegend={leftLegend}
+          middleLegend={middleLegend}
+          rightLegend={rightLegend}
+          resetSkills={reset}
+          skills={skills}
+        />
+      </Container>
     </div>
   );
 };
